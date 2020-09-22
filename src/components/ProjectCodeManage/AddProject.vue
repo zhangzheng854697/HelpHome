@@ -10,7 +10,7 @@
 				<el-col>
 				  	<span><span style='color:red'>* </span>项目名称 :</span>
 					<el-input v-model="PName" placeholder="请输入项目名称">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
@@ -22,7 +22,7 @@
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
 			    </el-col>
 			    <el-col>
@@ -34,7 +34,7 @@
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
 					<el-select v-model="SubjectId" filterable @change="handleSubjectIdChange" placeholder="请选择">
 						<el-option
@@ -43,7 +43,7 @@
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
 			    </el-col>
 			    <el-col>
@@ -59,43 +59,43 @@
 			    </el-col>
 			    <el-col>
 				  	<span>产品报价 :</span>
-					<el-input v-model="Price" placeholder="请输入产品报价">
-						
+					<el-input v-model="Price" placeholder="请输入产品报价" @change="handlePriceChange">
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span>产品合并后名称 :</span>
 					<el-input v-model="MergeName" placeholder="请输入多个项目合并后名称">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span><span style='color:red'>* </span>项目负责人 :</span>
 					<el-input v-model="PMFZR" placeholder="请输入项目负责人">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span><span style='color:red'>* </span>程序负责人 :</span>
 					<el-input v-model="CXFZR" placeholder="请输入程序负责人">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span>学校负责人 :</span>
 					<el-input v-model="TName" placeholder="请输入学校负责人">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span>联系方式 :</span>
 					<el-input v-model="TPhone" placeholder="请输入联系方式">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
-			    	<span class='text_title'>备注 :</span>
-					<el-input type="textarea" style="" placeholder="请填写备注" v-model="Remark"  :rows="6" resize="none" show-word-limit></el-input>
+			    	<span class='text_title'>项目参数 :</span>
+					<el-input type="textarea" style="" placeholder="请填写项目参数" v-model="Remark"  :rows="6" resize="none" show-word-limit></el-input>
 			    </el-col>
 			    <el-col>
 			    	<div class='button'>
@@ -146,6 +146,9 @@
       	}
     },
 	methods:{
+    handlePriceChange(){
+      this.Price = this.Price.replace(/\d{1,3}(?=(\d{3})+$)/g, '$&,');
+    },
 		LoadSchool(){
 			let _that = this;
 			this.$axios({
@@ -209,12 +212,12 @@
 
 		},
 		CopyMsg(val){
-			var input = document.createElement("input");  
-		    input.value = val;  
-		    document.body.appendChild(input);    
-		    input.select();  
-		    document.execCommand("Copy");   
-		    document.body.removeChild(input); 
+			var input = document.createElement("input");
+		    input.value = val;
+		    document.body.appendChild(input);
+		    input.select();
+		    document.execCommand("Copy");
+		    document.body.removeChild(input);
 		},
 		Submit(){
 			if(!this.PName){
@@ -252,18 +255,18 @@
 				let res = response.data
 				if(res.success == true){
 					_that.CopyMsg(res.msg)
-					
+
 					_that.$layer.msg('新增成功,已复制编码');
 					setTimeout(function(){ _that.backPage() }, 1500);
 				}
 			})
 			.catch(function(response){
-				
+
 				console.log(response)
 			})
 		},
 		backPage(){
-			this.$router.push('ProjectCode')
+			this.$router.push('/ProjectCode')
 		}
 	},
     mounted(){
@@ -271,7 +274,7 @@
     	this.LoadSubjectPid()
     },
     activated(){
-    	
+
     }
   }
 </script>

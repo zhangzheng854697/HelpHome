@@ -10,40 +10,40 @@
 				<el-col>
 				  	<span><span style='color:red'>* </span>项目名称 :</span>
 					<el-input v-model="PName" placeholder="请输入项目名称">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span><span style='color:red'>* </span>合作学校 :</span>
-					<el-select disabled v-model="SchoolValue" filterable @change="handleSchoolChange" placeholder="请选择">
+					<el-select :disabled="disable" v-model="SchoolValue" filterable @change="handleSchoolChange" placeholder="请选择">
 						<el-option
 						  v-for="item in SelectSchool"
 						  :key="item.S_Code"
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
 			    </el-col>
 			    <el-col>
 				  	<span><span style='color:red'>* </span>所属学科 :</span>
-					<el-select disabled v-model="SubjectPId" filterable @change="handleSubjectsPIdChange" placeholder="请选择">
+					<el-select :disabled="disable"  v-model="SubjectPId" filterable @change="handleSubjectsPIdChange" placeholder="请选择">
 						<el-option
 						  v-for="item in SubjectPIds"
 						  :key="item.S_Code"
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
-					<el-select disabled v-model="SubjectId" filterable @change="handleSubjectIdChange" placeholder="请选择">
+					<el-select :disabled="disable" v-model="SubjectId" filterable @change="handleSubjectIdChange" placeholder="请选择">
 						<el-option
 						  v-for="item in SubjectIds"
 						  :key="item.S_Code"
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
 			    </el-col>
 			    <el-col>
@@ -59,43 +59,43 @@
 			    </el-col>
 			    <el-col>
 				  	<span>产品报价 :</span>
-					<el-input v-model="Price" placeholder="请输入产品报价">
-						
+					<el-input v-model="Price" placeholder="请输入产品报价" :disabled="person_StateID==1?false:true"  @change="handePriceChange">
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span>产品合并后名称 :</span>
 					<el-input v-model="MergeName" placeholder="请输入多个项目合并后名称">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span><span style='color:red'>* </span>项目负责人 :</span>
 					<el-input v-model="PMFZR" placeholder="请输入项目负责人">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span><span style='color:red'>* </span>程序负责人 :</span>
 					<el-input v-model="CXFZR" placeholder="请输入程序负责人">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span>学校负责人 :</span>
 					<el-input v-model="TName" placeholder="请输入学校负责人">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 				  	<span>联系方式 :</span>
 					<el-input v-model="TPhone" placeholder="请输入联系方式">
-						
+
 					</el-input>
 			    </el-col>
 			    <el-col>
 			    	<span class='text_title'>项目参数 :</span>
-					<el-input type="textarea" style="" placeholder="请填写备注" v-model="Remark"  :rows="10" resize="none" show-word-limit></el-input>
+					<el-input type="textarea" style="" placeholder="请输入项目参数" v-model="Remark"  :rows="10" resize="none" show-word-limit></el-input>
 			    </el-col>
 			    <el-col>
 			    	<div class='button'>
@@ -113,6 +113,10 @@
   export default {
     data() {
       return {
+          disable:'',
+          NameList:'高俊辉;林茂辉;admin',
+          UserName:'',
+          person_StateID:'',
       		P_Id:'',
       		PName:'',
       		ObjName:'',
@@ -146,6 +150,9 @@
       	}
     },
 	methods:{
+    handePriceChange(){
+      this.Price = this.Price.replace(/\d{1,3}(?=(\d{3})+$)/g, '$&,');
+    },
 		LoadSchool(){
 			let _that = this;
 			this.$axios({
@@ -174,6 +181,7 @@
 			.then(function(response){
 				let res = response.data
 				_that.SubjectPIds = res;
+
 			})
 			.catch(function(response){
 				console.log(response)
@@ -185,7 +193,7 @@
 			    method: 'post',
 			    url: global_.HandlerZy,
 			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-			    params :{'mode':'ResSubjectByPId','PId':PId}
+			    params :{'mode':'ResSubjectByPId','PId':_that.SubjectPId}
 			})
 			.then(function(response){
 				let res = response.data;
@@ -196,7 +204,7 @@
 				console.log(response)
 			})
 		},
-		
+
 		LoadManage(){
 			let F_id = this.$route.query.id
 			let _that = this;
@@ -208,7 +216,6 @@
 			})
 			.then(function(response){
 				let res = response.data[0];
-				console.log(res)
 				_that.P_Id = res.P_Id
 				_that.PName = res.P_Name
 				_that.SchoolValue = res.School_Id;
@@ -231,7 +238,7 @@
 
 		},
 		handleSubjectsPIdChange(){
-
+      this.LoadSubjectId()
 		},
 		handleSubjectIdChange(){
 
@@ -262,16 +269,23 @@
 			})
 		},
 		backPage(){
-			this.$router.push('ProjectCode')
+			this.$router.push('/ProjectCode')
 		}
 	},
     mounted(){
+      this.person_StateID = localStorage.getItem("person_StateID")
+      console.log(localStorage.UserName)
+      if(this.NameList.indexOf(localStorage.UserName) == -1){
+        this.disable = true
+      }else{
+        this.disable = false
+      }
     	this.LoadManage()
     	this.LoadSchool()
     	this.LoadSubjectPid()
     },
     activated(){
-    	
+
     }
   }
 </script>

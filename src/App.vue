@@ -26,4 +26,5 @@ export default {
 .el-dialog__header{padding:10px 20px 10px;border-bottom:1px solid #ccc}
 .el-dialog__headerbtn{top:14px}
 .el-dialog--center .el-dialog__body{padding:25px 25px 10px}
+.is-required:before{content: "*";color: #f56c6c;margin-right: 5px;font-weight: bold;}
 </style>

@@ -4,8 +4,8 @@
 			<div class="content">
 				<div class="logo left"><img src="../assets/Esplogo.png"></div>
 				<div class="tip right">
-					<span><a href="http://115.28.176.223:68" >使用帮助</a></span>
-					<span><a class="active" href="http://115.28.176.223:88/dist/#/esphelphome">反馈中心</a></span>
+					<span><a href="http://feedback.mengoo.com:5381/help/index.html" >使用帮助</a></span>
+					<span><a class="active" href="http://feedback.mengoo.com:5381/esphelphome">反馈中心</a></span>
 				</div>
 			</div>
 		</div>
@@ -170,7 +170,7 @@ export default {
 		}
   	},
   methods:{
-  	
+
   	handleRemove(file) {
   		// 删除网页图片
   		let fileList = this.$refs.upload.uploadFiles;
@@ -186,7 +186,7 @@ export default {
   		let imgfileIndex = this.imgFile.findIndex(item=>{
   			return item == file.resUrl
   		})
-  		this.imgFile.splice(imgfileIndex,1) 
+  		this.imgFile.splice(imgfileIndex,1)
 
   		//删除服务器图片
       },
@@ -209,7 +209,7 @@ export default {
 			return;
 		}
 		var type = "imgFile";
-        var formData = new FormData();//这里需要实例化一个FormData来进行文件上传 
+        var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
         formData.append(type, file.raw);
 		this.$axios({
 		    method: 'post',
@@ -220,7 +220,7 @@ export default {
 			let url = response.data.url.split('..')[1]
 			file.resUrl = url
 			_that.imgFile.push(url)
-			
+
 		})
 		.catch(function(response){
 			console.log(response)
@@ -268,14 +268,14 @@ export default {
 					_that.dialogTableVisible = false;
 					_that.sendManage();
 				}
-				
+
 			})
 			.catch(function(response){
 				console.log(response)
 			})
 
 		},1000)
-		
+
 	},
 	sendManage(){
 		let that = this;
@@ -368,7 +368,7 @@ export default {
 		})
 
 
-	
+
 
   }
 }

@@ -4,7 +4,7 @@
 			<Nav></Nav>
 		</el-aside>
 		<el-container>
-			<el-header height="68px">
+			<el-header style="height:68px;padding:0 20px 0 0">
 				<Header></Header>
 			</el-header>
 			<el-main v-bind:style="{height: MainHeight+'px'}">
@@ -30,7 +30,7 @@
 	  	return {
 	  		MainHeight:968,
 	  	}
-	  	
+
 	  },
 	  mounted(){
 	    this.MainHeight = window.innerHeight-100
@@ -49,4 +49,9 @@
   background:#b7b7b7;}
 .el-main::-webkit-scrollbar-track {box-shadow:inset 0 0 5px rgba(0, 0, 0, 0.2);border-radius: 10px;background:#ededed;}
 .el-main{padding:20px 30px}
+>>>.el-textarea.is-disabled .el-textarea__inner{color:#28292b;cursor:text}
+>>>.el-input.is-disabled .el-input__inner{cursor:text}
+>>>.el-input.is-disabled .el-input__icon{cursor:text}
+>>>.vl-notify{z-index:99999}
+
 </style>

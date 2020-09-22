@@ -11,91 +11,118 @@
 					<tr>
 						<td>项目名称：</td>
 						<td colspan="2">
-							<el-input v-model="P_Name"  :disabled="disabled">
+							<el-input v-model="TableData.P_Name"  :disabled="disabled">
 
 							</el-input>
 						</td>
 					</tr>
-					<tr>
-						<td>产品合并名称：</td>
-						<td colspan="2">
-							<el-input v-model="P_MergeName"  :disabled="disabled">
-
-							</el-input>
-						</td>
-					</tr>
-					<tr>
-						<td>一级学科：</td>
-						<td>
-							<el-input v-model="S_NameYi"  :disabled="disabled">
-
-							</el-input>
-						</td>
-						<td>二级学科：</td>
-						<td>
-							<el-input v-model="S_NameEr" :disabled="disabled">
-
-							</el-input>
-						</td>
-					</tr>
-					<tr>
-						<td>销售状态：</td>
-						<td>
-							<el-input v-model="StateName"  :disabled="disabled">
-
-							</el-input>
-						</td>
-						<td>产品报价：</td>
-						<td>
-							<el-input v-model="P_Price"  :disabled="disabled">
-
-							</el-input>
-						</td>
-					</tr>
-					<tr>
-						<td>项目负责人：</td>
-						<td>
-							<el-input v-model="P_MFZR" :disabled="disabled">
-
-							</el-input>
-						</td>
-						<td>程序负责人：</td>
-						<td>
-							<el-input v-model="P_MCXFZR" :disabled="disabled">
-
-							</el-input>
-						</td>
-					</tr>
+          <!--<tr v-for="(item , index) in C_License">-->
+            <!--<td v-if="index==0">序列号：</td>-->
+            <!--<td v-else></td>-->
+            <!--<td colspan="2">-->
+              <!--<el-input v-model="C_License[index]"  :disabled="disabled">-->
+              <!--</el-input>-->
+            <!--</td>-->
+          <!--</tr>-->
           <tr>
-            <td>合作学校：</td>
-            <td>
-              <el-input v-model="schoolName" :disabled="disabled">
-
+            <td>序列号：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                :rows="TableData.C_Amount+1"
+                v-model="C_License"
+                :disabled="disabled">
               </el-input>
             </td>
-            <td>学校负责人：</td>
-            <td>
-              <el-input v-model="P_FZR"  :disabled="disabled">
+          </tr>
+          <tr>
+            <td>序列号数量：</td>
+            <td colspan="1">
+              <el-input v-model="TableData.C_Amount"  :disabled="disabled">
 
               </el-input>
             </td>
           </tr>
 					<tr>
-						<td>联系方式：</td>
+						<td>客户名称：</td>
 						<td>
-							<el-input v-model="P_FZR_Phone"  :disabled="disabled">
+							<el-input v-model="TableData.S_Name"  :disabled="disabled">
+
+							</el-input>
+						</td>
+						<td>版本：</td>
+						<td>
+							<el-input v-model="TableData.VersionName" :disabled="disabled">
 
 							</el-input>
 						</td>
 					</tr>
+          <tr>
+            <td>客户联系人：</td>
+            <td>
+              <el-input v-model="TableData.C_liaison"  :disabled="disabled">
+
+              </el-input>
+            </td>
+            <td>联系方式：</td>
+            <td>
+              <el-input v-model="TableData.C_Phone"  :disabled="disabled">
+
+              </el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>开始日期：</td>
+            <td>
+              <el-input v-model="TableData.C_StartDate"  :disabled="disabled">
+
+              </el-input>
+            </td>
+            <td>结束日期：</td>
+            <td>
+              <el-input v-model="TableData.C_EndDate"  :disabled="disabled">
+
+              </el-input>
+            </td>
+          </tr>
 					<tr>
-						<td>项目参数：</td>
+						<td>市场人员：</td>
+						<td>
+							<el-input v-model="TableData.C_Market"  :disabled="disabled">
+
+							</el-input>
+						</td>
+						<td>客户状态：</td>
+						<td>
+							<el-input v-model="TableData.ClientStateName"  :disabled="disabled">
+
+							</el-input>
+						</td>
+					</tr>
+
+          <tr>
+            <td>操作人：</td>
+            <td>
+              <el-input v-model="TableData.person_Name"  :disabled="disabled">
+
+              </el-input>
+            </td>
+            <td>操作时间：</td>
+            <td>
+              <el-input v-model="TableData.CreateTime"  :disabled="disabled">
+
+              </el-input>
+            </td>
+          </tr>
+
+					<tr>
+						<td>备注：</td>
 						<td colspan="3">
 							<el-input
 							  type="textarea"
-							  :rows="14"
+							  :rows="4"
 
-							  v-model="textarea"
+							  v-model="TableData.C_Remark"
 							  :disabled="disabled">
 							</el-input>
 						</td>
@@ -113,23 +140,11 @@
   export default {
     data() {
       return {
-          schoolName:'',
       		disabled:true,
-      		P_Name:'',
-      		P_MergeName:'',
-      		S_NameYi:'',
-      		S_NameEr:'',
-      		StateName:'',
-      		P_Price:'',
-      		P_MFZR:'',
-      		P_MCXFZR:'',
-      		P_FZR:'',
-      		P_FZR_Phone:'',
+          C_License:'',
+          TableData:{},
+          testarea1:'123123',
       		textarea:'1.实验内容：（1）气体分析仪器的操作（2）无创心功能的操作（3）血液成分分析仪操作（4）运动过程中呼吸、心功能、血液等变化2.参数特点：通过“虚拟快进”、“时空融合”等虚拟手段，突破真实实验的局限性，在没有运动伤害和致命风险情况下，直观再现运动过程中的氧运输系统机能变化。帮助学生深入理解人体机能状态的个体差异与影响因素，培养学生研究分析能力与科研意识。为将来开具个性化的运动训练方案和健身处方累积经验。',
-
-
-
-
       	}
     },
 	methods:{
@@ -138,31 +153,15 @@
 			let _that = this;
 			this.$axios({
 			    method: 'post',
-			    url: global_.HandlerZy,
+			    url: global_.HandlerSchoolClient,
 			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-			    params :{'mode':'QryProById','id':F_id}
+			    params :{'mode':'QrySchoolClientById','id':F_id}
 			})
 			.then(function(response){
-				console.log(response)
 				let res = response.data[0];
 				console.log(res)
-				_that.P_Name = res.P_Name
-				_that.P_MergeName = res.P_MergeName
-				_that.S_NameYi = res.S_NameYi
-				_that.S_NameEr = res.S_NameEr
-				_that.StateName = res.StateName
-        _that.schoolName = res.schoolName
-        if(res.P_Price.indexOf(',')==-1){
-          _that.P_Price = res.P_Price.replace(/\d{1,3}(?=(\d{3})+$)/g, '$&,');
-        }else{
-          _that.P_Price = res.P_Price
-        }
-
-				_that.P_MFZR = res.P_MFZR
-				_that.P_MCXFZR = res.P_MCXFZR
-				_that.P_FZR = res.P_FZR
-				_that.P_FZR_Phone = res.P_FZR_Phone
-				_that.textarea = res.P_Remark
+        _that.TableData = res;
+        _that.C_License = res.C_License.replace(/;/g,'\r\n');
 
 			})
 			.catch(function(response){
@@ -182,7 +181,7 @@
 
 		},
 		backPage(){
-			this.$router.push('/ProjectCode')
+			this.$router.push('/EspManage')
 		}
 	},
     mounted(){

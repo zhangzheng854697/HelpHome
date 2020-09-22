@@ -8,7 +8,7 @@
 		<div class="content">
 			<el-row >
 				<el-col>
-          <span class="is-required" >项目名称 :</span>
+				  	<span>项目名称 :</span>
 					<el-select v-model="ProjectValue" filterable @change="handleSchoolChange" placeholder="请选择">
 						<el-option
 						  v-for="item in SelectProject"
@@ -20,7 +20,7 @@
 					</el-select>
 			    </el-col>
 			    <el-col>
-				  	<span class="is-required">采购学校 :</span>
+				  	<span>采购学校 :</span>
 					<el-select v-model="SchoolValue" filterable @change="handleSchoolChange" placeholder="请选择">
 						<el-option
 						  v-for="item in SelectSchool"
@@ -32,19 +32,19 @@
 					</el-select>
 			    </el-col>
 			    <el-col>
-				  	<span class="is-required">部署人员 :</span>
+				  	<span>部署人员 :</span>
 					<el-select v-model="C_Deploy" filterable @change="handleResPersonChange" placeholder="请选择">
 						<el-option
 						  v-for="item in ResPerson"
-						  :key="item.person_Number"
+						  :key="item.person_Id"
 						  :label="item.person_Name"
-						  :value="item.person_Number">
+						  :value="item.person_Id">
 						</el-option>
 
 					</el-select>
 			    </el-col>
 			    <el-col>
-			    	<span class="is-required">部署状态 :</span>
+			    	<span>部署状态 :</span>
 					<el-select v-model="StatesValue" filterable @change="handleCStatesChange" placeholder="请选择部署状态">
 						<el-option
 						  v-for="item in CStates"
@@ -55,68 +55,31 @@
 					</el-select>
 			    </el-col>
 			    <el-col>
-				  	<span class="is-required">项目网址 :</span>
+				  	<span>项目网址 :</span>
 					<el-input v-model="ProjectWeb" placeholder="请输入项目网址">
 
 					</el-input>
 			    </el-col>
 			    <el-col>
-				  	<span>序列号 :</span>
-					<el-input v-model="License" placeholder="请输入序列号">
+				  	<span>许可证 :</span>
+					<el-input v-model="License" placeholder="请输入项目网址">
 
 					</el-input>
 			    </el-col>
-
 			    <el-col>
-			    	<span class="is-required">市场人员 :</span>
+			    	<span>市场人员 :</span>
 					<el-select v-model="C_Market" filterable @change="handleCResPersonChange" placeholder="请选择市场人员">
 						<el-option
 						  v-for="item in C_ResPerson"
-						  :key="item.person_Number"
+						  :key="item.person_Id"
 						  :label="item.person_Name"
-						  :value="item.person_Number">
+						  :value="item.person_Id">
 						</el-option>
 					</el-select>
 			    </el-col>
-          <el-col>
-            <span class="is-required">客户状态 :</span>
-            <el-select v-model="ClientState" filterable  placeholder="请选择客户状态">
-              <el-option
-                v-for="item in select_ClientState"
-                :key="item.ClientCode"
-                :label="item.ClientState"
-                :value="item.ClientCode">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col>
-            <span>使用日期 :</span>
-            <el-date-picker
-              v-model="SelectTime"
-              type="daterange"
-              :picker-options="pickerOptions"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="left">
-            </el-date-picker>
-          </el-col>
-
-          <el-col>
-            <span>客户联系人 :</span>
-            <el-input v-model="liaison" placeholder="请输入客户联系人">
-
-            </el-input>
-          </el-col>
-          <el-col>
-            <span>联系方式 :</span>
-            <el-input v-model="liaisonPhone" placeholder="请输入联系方式">
-
-            </el-input>
-          </el-col>
 			    <el-col>
-			    	<span class='text_title'>项目参数 :</span>
-					<el-input type="textarea" style="" placeholder="请输入项目参数" v-model="Remark"  :rows="6" resize="none" show-word-limit></el-input>
+			    	<span class='text_title'>备注 :</span>
+					<el-input type="textarea" style="" placeholder="请填写备注" v-model="Remark"  :rows="6" resize="none" show-word-limit></el-input>
 			    </el-col>
 			    <el-col>
 			    	<div class='button'>
@@ -134,51 +97,6 @@
   export default {
     data() {
       return {
-          liaison:'',
-          liaisonPhone:'',
-          pickerOptions: {
-            shortcuts: [{
-              text: '最近一个月',
-              onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  end.setTime(end.getTime() + 3600 * 1000 * 24 * 30);
-                  picker.$emit('pick', [start, end]);
-                }
-              }, {
-                text: '最近五年',
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  end.setTime(end.getTime() + 157766400000);
-                  picker.$emit('pick', [start, end]);
-                }
-              }, {
-                text: '永久',
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  end.setTime(end.getTime() + 2492985600000);
-                  picker.$emit('pick', [start, end]);
-                }
-              }]
-          },
-          SelectTime:'',
-          ClientState:'',
-          select_ClientState:[
-            {
-              'ClientCode':1,
-              'ClientState':'正式客户'
-            },
-            {
-              'ClientCode':2,
-              'ClientState':'意向用户'
-            },
-            {
-              'ClientCode':3,
-              'ClientState':'试用客户'
-            },
-          ],
       		License:'',
       		P_Id:'',
       		SelectProject:[],
@@ -207,7 +125,7 @@
 	methods:{
 		LoadProject(){
 			let _that = this;
-			let fromdata = `mode=ResProject&configure=5`
+			let fromdata = `mode=ResProject`
 			this.$axios({
 			    method: 'post',
 			    url: global_.HandlerZy,
@@ -246,7 +164,7 @@
 			let fromdata = `mode=ResPerson&SId=7`
 			this.$axios({
 			    method: 'post',
-			    url: global_.HandlerPerson,
+			    url: global_.HandlerZy,
 			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
 			    data :fromdata
 			})
@@ -264,7 +182,7 @@
 			let fromdata = `mode=ResPerson&SId=3`
 			this.$axios({
 			    method: 'post',
-			    url: global_.HandlerPerson,
+			    url: global_.HandlerZy,
 			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
 			    data :fromdata
 			})
@@ -272,7 +190,7 @@
 
 				let res = response.data;
 				_that.C_ResPerson = res
-
+				console.log(res)
 
 			})
 			.catch(function(response){
@@ -283,7 +201,8 @@
 
 		},
 		handleResPersonChange(){
-
+			console.log(this.C_Deploy)
+			console.log(this.ResPerson)
 		},
 		handleCResPersonChange(){
 
@@ -291,7 +210,6 @@
 		handleCStatesChange(){
 
 		},
-
 		Submit(){
 			if(!this.ProjectValue){
 				this.$layer.msg('请选择项目');
@@ -305,55 +223,27 @@
 			}else if(!this.C_Market){
 				this.$layer.msg('请选择市场人员');
 				return;
-			}else if(!this.ClientState){
-				this.$layer.msg('请选择客户状态');
-				return;
 			}else if(this.StatesValue!=1&&this.StatesValue!=2){
-        this.$layer.msg('请选择部署状态');
-        return;
-      }else if(!this.ProjectWeb){
+				this.$layer.msg('请选择部署状态');
+				return;
+			}else if(!this.ProjectWeb){
 				this.$layer.msg('请填写项目地址');
 				return;
 			}
 
 			let _that = this;
-			let fromdata = `mode=InsSchoolClient&Remark=${this.Remark}`
-      let StartDate = '';
-      let EndDate = '';
-      if(this.SelectTime){
-        StartDate = new Date(this.SelectTime[0])
-        EndDate = new Date(this.SelectTime[1])
-        StartDate=StartDate.getFullYear() + '-' + (StartDate.getMonth() + 1) + '-' + StartDate.getDate() ;
-        EndDate=EndDate.getFullYear() + '-' + (EndDate.getMonth() + 1) + '-' + EndDate.getDate() ;
-      }
+			let fromdata = `mode=InsSchoolCG&Remark=${this.Remark}`
 			this.$axios({
 			    method: 'post',
-			    url: global_.HandlerSchoolClient,
+			    url: global_.HandlerSchoolCG,
 			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-			    params :{
-			      'SCode':_that.SchoolValue,
-            'PCode':_that.ProjectValue,
-            'Person1':_that.C_Deploy,
-            'Person6':_that.C_Market,
-            'DeployState':_that.StatesValue,
-            'Website':_that.ProjectWeb,
-            'MACLicense':_that.License,
-            'ESPLicense':'',
-            'Version':'',
-            'ClientState':_that.ClientState,
-            'Amount':'',
-            'StartDate':StartDate,
-            'EndDate':EndDate,
-            'liaison':_that.liaison,
-            'Phone':_that.liaisonPhone,
-            'Role':5
-          },
+			    params :{'SCode':_that.SchoolValue,'PCode':_that.ProjectValue,'Person1':_that.C_Deploy,'Person6':_that.C_Market,'DeployState':_that.StatesValue,'Website':_that.ProjectWeb,'License':_that.License},
 			    data:fromdata
 			})
 			.then(function(response){
 				let res = response.data
 				if(res.success == true){
-					_that.CopyMsg(res.msg);
+					_that.CopyMsg();
 					_that.$layer.msg('编辑成功');
 					setTimeout(function(){ _that.backPage() }, 1500);
 				}
@@ -375,7 +265,6 @@
 		}
 	},
     mounted(){
-
     	this.LoadProject()
     	this.LoadSchool()
     	this.LoadPerson()
@@ -394,6 +283,4 @@
 .content .el-textarea{width:440px}
 .text_title{line-height:138px}
 .button{float:left;margin-left:220px}
->>>.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{width:440px}
-
 </style>

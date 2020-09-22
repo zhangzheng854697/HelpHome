@@ -16,7 +16,7 @@
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
+
 					</el-select>
 			  </el-col>
 			  <el-col :xs='24' :md='12' :lg="8">
@@ -30,13 +30,13 @@
 				    </el-option>
 				  </el-select>
 			  </el-col>
-			  
+
 			  <el-col :xs='24' :md='12' :lg="8">
-			  	<span>检索</span>
-				<el-input v-model="SearchValue" placeholder="请输入内容">
+			  	<span></span>
+				<el-input v-model="SearchValue" @keyup.enter.native="SearchStatu" placeholder="请输入项目名称/相关负责人">
 					<el-button slot="append" icon="el-icon-search" @click='SearchStatu()'></el-button>
 				</el-input>
-				
+
 			  </el-col>
 			  <el-col :xs='24' :md='12' :lg="8">
 			  	<span>销售状态</span>
@@ -49,7 +49,7 @@
 				    </el-option>
 				  </el-select>
 			  </el-col>
-			  
+
 			  <el-col :xs='24' :md='12' :lg="8">
 			  	<span>二级学科</span>
 				  <el-select v-model="SubjectId" filterable @change="handleSubjectIdChange" placeholder="请选择二级学科">
@@ -61,13 +61,25 @@
 				    </el-option>
 				  </el-select>
 			  </el-col>
+
+        <el-col :xs='24' :md='12' :lg="8" v-if="UserName.includes(LuserNumber)">
+          <span>处理状态</span>
+          <el-select v-model="ObjState" filterable @change="handleSubjectIdChange" placeholder="请选择二级学科">
+            <el-option
+              v-for="item in ObjStates"
+              :key="item.StateCode"
+              :label="item.StateName"
+              :value="item.StateCode">
+            </el-option>
+          </el-select>
+        </el-col>
 			</el-row>
 
 		</div>
 		<div class="ButtonBox">
-			<el-button type="primary" @click='$router.push("AddProject")'>新增</el-button>
+			<el-button type="primary" @click='$router.push("ProjectCode/AddProject")'>新增</el-button>
 			<el-button type="success" @click='OnFile()'>预览/导出Excel</el-button>
-			
+
 		</div>
 		<div class="content">
 			<el-table
@@ -76,7 +88,7 @@
 			    :data="tableData"
 			    border
 			    @row-click='clickRow'
-			    style="width: 100%">
+        style="width: 100%">
 			    <el-table-column
 			      type="selection"
 
@@ -89,9 +101,12 @@
 			      width="50">
 			    </el-table-column>
 			    <el-table-column
-			      prop="P_Code"
 			      label="项目编号"
-			      width="120">
+			      width="130">
+            <template slot-scope="scope">
+              <span v-if="scope.row.EditState == 2" style="color: red;">{{scope.row.P_Code}}</span>
+              <span v-else>{{scope.row.P_Code}}</span>
+            </template>
 			    </el-table-column>
 			    <el-table-column
 			      prop="S_Name"
@@ -137,7 +152,7 @@
 			      label="创建时间"
 			      width="100">
 			    </el-table-column>
-			    <el-table-column label="操作" width="197">
+			    <el-table-column label="操作" :width="person_StateID == 1|| UserName.includes(LuserNumber)?200:140">
 			        <template slot-scope="scope">
 				        <el-button
 				          size="mini"
@@ -146,9 +161,15 @@
 				          size="mini"
 				          type="primary"
 				          @click.stop="handleInfo(scope.$index, scope.row)">详情</el-button>
+                <el-button
+                  size="mini"
+                  type="success"
+                  v-if="UserName.includes(LuserNumber)"
+                  @click.stop="EditState(scope.$index, scope.row)">处理</el-button>
 				        <el-button
 				          size="mini"
 				          type="danger"
+                  v-if="person_StateID == 1"
 				          @click.stop="handleDeleteBefore(scope.$index, scope.row)">作废</el-button>
 			        </template>
 			    </el-table-column>
@@ -163,7 +184,7 @@
 		      layout="sizes, prev, pager, next"
 		      :total="totalManage">
 		    </el-pagination>
-		   
+
 		</div>
 		<el-dialog
 		  title="提示"
@@ -185,16 +206,17 @@
 			<el-table :data="OnFileData">
 				<el-table-column label="序号" width="50">
 					<template slot-scope="scope">
-		              {{scope.$index+1}} 
-		            </template>
+            {{scope.$index+1}}
+          </template>
 				</el-table-column>
 				<el-table-column property="P_Code" label="项目编号" width="120"></el-table-column>
-				<el-table-column property="S_Name1" label="一级学科" width="150"></el-table-column>
-				<el-table-column property="S_Name2" label="二级学科" width="150"></el-table-column>
-				<el-table-column property="S_Name" label="合作学校" width="150"></el-table-column>
-				<el-table-column property="P_FZR" label="学校负责人" width="150"></el-table-column>
+				<el-table-column property="S_NameYi" label="一级学科" width="150"></el-table-column>
+				<el-table-column property="S_NameEr" label="二级学科" width="150"></el-table-column>
+				<el-table-column property="schoolName" label="合作学校" width="150"></el-table-column>
+        <el-table-column property="P_FZR" label="学校负责人" width="150"></el-table-column>
+        <el-table-column property="P_Price" label="项目价格" width="100"></el-table-column>
 				<el-table-column property="P_Name" label="项目名称"></el-table-column>
-				
+
 			</el-table>
 		</el-dialog>
 	</div>
@@ -204,6 +226,23 @@
   export default {
     data() {
       return {
+        ObjState:'',
+        ObjStates:[
+          {
+            StateCode:'',
+            StateName:'--请选择--'
+          },
+          {
+            StateCode:1,
+            StateName:'已处理'
+          },
+          {
+            StateCode:2,
+            StateName:'未处理'
+          },
+        ],
+        LuserNumber:'',
+        UserName:['瞿静雯','郑家乐','zzg','admin','zz'],
       	TipShow:false,
       	dialogTableVisible:false,
       	centerDialogVisible:false,
@@ -221,6 +260,7 @@
       	totalManage:0,
       	SubjectPIds:[],
       	SubjectIds:[],
+        person_StateID:"",
       	CStates:[{
       		StateCode:-1,
       		StateName:'--请选择--'
@@ -243,10 +283,29 @@
 
         }],
         OnFileData:[],
-        TotalSelect:'', 
+        TotalSelect:'',
       }
     },
 	methods:{
+    EditState(index,row){
+      let _that = this;
+      this.$axios({
+        method: 'get',
+        url: global_.HandlerZy,
+        // headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+        params :{'mode':'EditState','id':row.P_Id}
+      })
+        .then(function(response){
+          let res = response.data;
+          if(res.success == true){
+            _that.$layer.msg('操作成功')
+            row.EditState =1;
+          }
+        })
+        .catch(function(response){
+          console.log(response)
+        })
+    },
 		getRowKey (row) {
 	      return row.P_Id
 	    },
@@ -265,7 +324,7 @@
 			    method: 'get',
 			    url: global_.HandlerZy,
 			    // headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-			    params :{'mode':'QryProject','limit':_that.limit,'offset':_that.offset,'order':'asc','name':_that.SearchValue,'schoolId':_that.SchoolValue,'SubjectPId':_that.SubjectPId,'SubjectId':_that.SubjectId,'CStateId':_that.CStatesValue}
+			    params :{'EditState':_that.ObjState,'mode':'QryProject','limit':_that.limit,'offset':_that.offset,'order':'asc','name':_that.SearchValue,'schoolId':_that.SchoolValue,'SubjectPId':_that.SubjectPId,'SubjectId':_that.SubjectId,'CStateId':_that.CStatesValue}
 			})
 			.then(function(response){
 				_that.tableData = response.data.rows
@@ -276,9 +335,8 @@
 			})
 		},
 		handleEdit(index,row){
-
 			let F_Id = row.P_Id;
-			this.$router.push({path:'EditProject',query:{'id':F_Id}})
+			this.$router.push({path:'ProjectCode/EditProject',query:{'id':F_Id}})
 		},
 		handleDelete(){
 			let F_Id = this.F_Id;
@@ -344,7 +402,7 @@
 	    },
 	    handleInfo(index,row){
 	    	let F_Id = row.P_Id;
-			this.$router.push({path:'InfoProject',query:{'id':F_Id}})
+			  this.$router.push({path:'ProjectCode/InfoProject',query:{'id':F_Id}})
 	    },
 	    OnFile(){
 
@@ -356,37 +414,60 @@
 
 	    		return
 	    	}
-	    	this.OnFileData = rows;
-	    	this.TotalSelect = rows.length
+	    	// this.OnFileData = rows;
+	      this.TotalSelect = rows.length
 	    	this.dialogTableVisible = true;
 	    	let arr = [];
+	    	let listString = '';
 	    	let excelName = '梦之路产品清单';
 	    	rows.forEach(function(item,i){
 	    		arr.push(item.P_Id)
+          listString += item.P_Id+','
 	    	})
+        listString = listString.substring(0,listString.length-1)
 	    	let _that = this;
-	    	let formdata = `mode=DataSetToExcel&pIds=${arr}&excelName=${excelName}`
-			this.$axios({
-			    method: 'post',
-			    url: global_.HandlerDaoChu,
-			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-			    data:formdata
-			})
-			.then(function(response){
-				let res = response.data;
-				if(res.success){
-					_that.DownloadUrl = global_.url_prefix+"/Project_Excel/" + res.msg
-					// window.open(global_.url_prefix+"Project_Excel/" + res.msg);
-				}
-			})
-			.catch(function(response){
-				console.log(response)
-			})
+	    	console.log(listString)
+        let listdata = `mode=QryProByIds&ids=${listString}`
+        let formdata = `mode=DataSetToExcel&pIds=${arr}&excelName=${excelName}`
+        this.$axios({
+          method: 'post',
+          url: global_.HandlerZy,
+          headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+          data:listdata
+        })
+          .then(function(response){
+            let res = response.data;
+            console.log(res)
+
+            _that.OnFileData = res;
+
+          })
+          .catch(function(response){
+            console.log(response)
+          })
+        this.$axios({
+            method: 'post',
+            url: global_.HandlerDaoChu,
+            headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+            data:formdata
+        })
+        .then(function(response){
+          let res = response.data;
+          if(res.success){
+            _that.DownloadUrl = global_.url_prefix+"/Project_Excel/" + res.msg
+            // window.open(global_.url_prefix+"Project_Excel/" + res.msg);
+          }
+        })
+        .catch(function(response){
+          console.log(response)
+        })
 	    }
 	},
     mounted(){
+      this.person_StateID = localStorage.getItem("person_StateID")
+      this.LuserNumber = localStorage.getItem("UserName")
     	let _that = this
-		this.LoadManage()
+      this.LoadManage()
     	this.$axios({
 		    method: 'post',
 		    url: global_.HandlerZy,
@@ -413,10 +494,13 @@
 			console.log(response)
 		})
 
-		
+
     },
     activated(){
     	this.LoadManage()
+      this.person_StateID = localStorage.getItem("person_StateID")
+      this.LuserNumber = localStorage.getItem("UserName")
+      console.log(this.UserName.includes(this.LuserNumber))
     }
   }
 </script>
@@ -425,7 +509,7 @@
 	#select div span{margin-right:10px;}
 	#select .el-col{margin:10px 0;padding-left:10px;text-align:left}
 	.content{padding:10px 0;margin-top: 20px}
-	.el-input{width:217px;}
+	.el-input{width:285px;}
 	.el-pagination{margin-top:20px}
 	>>> .el-dialog{border-radius:5px}
 	.el-dialog__body span{font-size:16px}
@@ -442,5 +526,6 @@
 	#OnFile a{color:red}
 	#OnFile a:hover{text-decoration:none}
 	>>>.el-dialog__body{padding-top:10px}
-	>>>.el-dialog{width:70%} 
+	>>>.el-dialog{width:70%}
+
 </style>

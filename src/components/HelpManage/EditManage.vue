@@ -16,13 +16,13 @@
 				<el-col :xs='24' :md='12' :lg="8"><span>提交时间： </span>{{SubmitTime}}</el-col>
 				<el-col :xs='24' :md='12' :lg="8" class='img_box' v-show='ImageUrl'><span>图片： </span>
 					<div v-for="(item , i) in srcList">
-						<el-image 
+						<el-image
 							style="width: 100px; height: 100px"
 							:append-to-body="true"
-							:src="item" 
+							:src="item"
 							:preview-src-list="srcList">
 						</el-image>
-					</div>	
+					</div>
 				</el-col>
 			</el-row >
 		</div>
@@ -142,7 +142,7 @@
 		sendWechart(){
 			let F_id = this.$route.query.id
 			let _that = this;
-			let fromdata = `type=feedback&openid=${_that.openid}&project=${_that.ObjName}&content=${_that.desc}&reply_text=${_that.reply}&remark=&time=${_that.SubmitTime}&url=http://feedback.mengoo.com:88/dist/#/ReplyInfo?id=${F_id}`
+			let fromdata = `type=feedback&openid=${_that.openid}&project=${_that.ObjName}&content=${_that.desc}&reply_text=${_that.reply}&remark=&time=${_that.SubmitTime}&url=http://115.28.176.223:88/ReplyInfo?id=${F_id}`
 			this.$axios({
 			    method: 'post',
 			    url:'https://www.xinke081.cn/wechat/tmplmsg.php',
@@ -156,7 +156,7 @@
 
 					_that.SubmitReply();
 				}
-				
+
 			})
 			.catch(function(response){
 				console.log(response)
@@ -178,21 +178,21 @@
 			})
 			.then(function(response){
 				if(response.data.success){
-				
+
 					_that.$layer.msg('编辑成功');
 					setTimeout(function(){ _that.backPage() }, 1500);
-					
+
 				}
-				
+
 			})
 			.catch(function(response){
 				console.log(response)
 			})
 		},
 		backPage(){
-			this.$router.push('HelpManage')
+			this.$router.push('/HelpManage')
 		}
-		
+
 	},
     mounted(){
     	this.LoadManage()

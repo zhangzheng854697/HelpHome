@@ -16,42 +16,52 @@
 						  :label="item.S_Name"
 						  :value="item.S_Code">
 						</el-option>
-						
 					</el-select>
 			  </el-col>
 			  <el-col :xs='24' :md='12' :lg="8">
-			  	<span>部署人员</span>
-				  <el-select v-model="Person" filterable @change="handleCStatesChange" placeholder="请选择销售状态">
+			  	<span>项目名称</span>
+				  <el-select v-model="Project" filterable @change="handleProjectChange" placeholder="请选择项目名称">
 				    <el-option
-				      v-for="item in ResPerson"
-				      :key="item.person_Id"
-				      :label="item.person_Name"
-				      :value="item.person_Id">
+				      v-for="item in SelectProject"
+				      :key="item.P_Code"
+				      :label="item.P_Name"
+				      :value="item.P_Code">
 				    </el-option>
 				  </el-select>
 			  </el-col>
 			  <el-col :xs='24' :md='12' :lg="8">
-			  	<span>检索</span>
-				<el-input v-model="SearchValue" placeholder="请输入内容">
-					<el-button slot="append" icon="el-icon-search" @click='SearchStatu()'></el-button>
-				</el-input>
-				
+          <!--<span>相关人员</span>-->
+          <!--<el-select v-model="Person" filterable @change="handleCStatesChange" placeholder="请选择部署人员">-->
+            <!--<el-option-->
+              <!--v-for="item in ResPerson"-->
+              <!--:key="item.person_Number"-->
+              <!--:label="item.person_Name"-->
+              <!--:value="item.person_Number">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+          <span></span>
+          <el-input v-model="Person" placeholder="请输入相关人员名称" @keyup.enter.native="handleCStatesChange">
+            <el-button slot="append" icon="el-icon-search"  @click='handleCStatesChange()'></el-button>
+          </el-input>
+
 			  </el-col>
 			</el-row>
 		</div>
 		<div class="ButtonBox">
-			<el-button type="primary" @click='$router.push("AddXtxCode")'>新增</el-button>
+			<el-button type="primary" @click='$router.push("XtxManage/AddXtxCode")'>新增</el-button>
 		</div>
 		<div class="content">
 			<el-table
 				ref="multipleTable"
+				:row-key="getRowKey"
 			    :data="tableData"
 			    border
 			    @row-click='clickRow'
 			    style="width: 100%">
 			    <el-table-column
 			      type="selection"
-			      width="50">
+			      width="50"
+			      :reserve-selection="true">
 			    </el-table-column>
 			    <el-table-column
 			      prop="rowIndex"
@@ -73,26 +83,39 @@
 			      label="项目名称">
 			    </el-table-column>
 			    <el-table-column
-			      prop="C_DeployStateName"
 			      label="部署状态"
 			      width="100">
+            <template slot-scope="scope">
+              <span v-if="scope.row.C_DeployState == 2">学校服务器</span>
+              <span v-else-if="scope.row.C_DeployState == 1">公司服务器</span>
+            </template>
 			    </el-table-column>
 			    <el-table-column
-			      prop="DeployPerson"
+			      prop="C_Deploy"
 			      label="部署人员"
 			      width="100">
 			    </el-table-column>
-			    <el-table-column label="操作" width="150">
-			        <template slot-scope="scope">
-				        <el-button
-				          size="mini"
-				          @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
-				        <el-button
-				          size="mini"
-				          type="danger"
-				          @click.stop="handleDeleteBefore(scope.$index, scope.row)">作废</el-button>
-			        </template>
-			    </el-table-column>
+        <el-table-column
+          prop="CreateTime"
+          label="操作时间"
+          width="160">
+        </el-table-column>
+        <el-table-column label="操作" :width="person_StateID == 1?200:140">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click.stop="handleInfo(scope.$index, scope.row)">详情</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              v-if="person_StateID == 1"
+              @click.stop="handleDeleteBefore(scope.$index, scope.row)">作废</el-button>
+          </template>
+        </el-table-column>
 			</el-table>
 			<el-pagination
 			  background
@@ -104,7 +127,7 @@
 		      layout="sizes, prev, pager, next"
 		      :total="totalManage">
 		    </el-pagination>
-		   
+
 		</div>
 		<el-dialog
 		  title="提示"
@@ -164,6 +187,9 @@
   export default {
     data() {
       return {
+        SelectProject:'',
+        Project:'',
+        person_StateID:'',
       	dialogTableVisible:false,
       	centerDialogVisible:false,
       	SearchValue:'',
@@ -199,6 +225,13 @@
       }
     },
 	methods:{
+    handleInfo(index,row){
+       let F_Id = row.C_Id;
+       this.$router.push({path:'XtxManage/XtxInfoProject',query:{'id':F_Id}})
+    },
+		getRowKey (row) {
+	      return row.C_Id
+	    },
 		clickRow(row){
 			// this.InfoData = row
 			// this.dialogTableVisible = true
@@ -212,15 +245,16 @@
 		LoadManage(){
 			this.offset = (this.currentPage-1)*this.limit
 			let _that = this;
+			let fromdata = `Role=5&mode=QrySchoolClient&SCode=${_that.SchoolValue}&PCode=${_that.Project}&limit=${_that.limit}&offset=${_that.offset}&order=asc&name=${_that.Person}`
 			this.$axios({
-			    method: 'get',
-			    url: global_.HandlerSchoolCG,
-			    // headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-			    params :{'mode':'QrySchoolCG','SCode':_that.SchoolValue,'PCode':_that.Person,'limit':_that.limit,'offset':_that.offset,'order':'asc','name':_that.SearchValue}
+			    method: 'post',
+			    url: global_.HandlerSchoolClient,
+			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+          data:fromdata
+			    // params :{'mode':'QrySchoolCG','SCode':_that.SchoolValue,'PCode':_that.Person,'limit':_that.limit,'offset':_that.offset,'order':'asc','name':_that.SearchValue}
 			})
 			.then(function(response){
 				_that.tableData = response.data.rows
-				console.log(response.data.rows)
 				_that.totalManage = response.data.total
 			})
 			.catch(function(response){
@@ -229,15 +263,15 @@
 		},
 		handleEdit(index,row){
 			let F_Id = row.C_Id;
-			this.$router.push({path:'EditXtxCode',query:{'id':F_Id}})
+			this.$router.push({path:'XtxManage/EditXtxCode',query:{'id':F_Id}})
 		},
 		handleDelete(){
 			let F_Id = this.F_Id;
 			let _that = this;
-			let fromdata = `mode=DelSchoolCG&id=${F_Id}`
+			let fromdata = `mode=DelSchoollClient&id=${F_Id}`
 			this.$axios({
 			    method: 'post',
-			    url: global_.HandlerSchoolCG,
+			    url: global_.HandlerSchoolClient,
 			    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
 			    data :fromdata
 			})
@@ -252,12 +286,10 @@
 		handleSizeChange(val) {
 			this.limit = val;
 			this.LoadManage()
-        	console.log(`每页 ${val} 条`);
 	    },
 	    handleCurrentChange(val) {
 	    	this.currentPage = val;
 	    	this.LoadManage()
-	        console.log(`当前页: ${val}`);
 	    },
 	    handleSchoolChange(val){
 	    	this.LoadManage()
@@ -277,7 +309,6 @@
 			    params :{'mode':'ResSubjectByPId','PId':_that.SubjectPId}
 			})
 			.then(function(response){
-				console.log(response.data)
 				_that.SubjectIds = response.data
 				_that.SubjectId = '';
 				_that.LoadManage()
@@ -285,13 +316,13 @@
 			.catch(function(response){
 				console.log(response)
 			})
-	    	console.log('pid')
 	    },
 	    SearchStatu(){
 	    	this.LoadManage()
 	    },
 	},
     mounted(){
+      this.person_StateID = localStorage.getItem("person_StateID")
     	let _that = this
 		this.LoadManage()
     	this.$axios({
@@ -309,19 +340,32 @@
 
 		this.$axios({
 		    method: 'post',
-		    url: global_.HandlerZy,
+		    url: global_.HandlerPerson,
 		    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
 		    params :{'mode':'ResPerson','SId':'7'}
 		})
 		.then(function(response){
-			console.log(response.data)
 			_that.ResPerson = response.data
 		})
 		.catch(function(response){
 			console.log(response)
 		})
 
-		
+    this.$axios({
+      method: 'post',
+      url: global_.HandlerZy,
+      headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+      data :`mode=ResProject&configure=5`
+    })
+      .then(function(response){
+        let res = response.data;
+        _that.SelectProject = res
+
+      })
+      .catch(function(response){
+        console.log(response)
+      })
+
     },
     activated(){
     	this.LoadManage()
@@ -333,11 +377,11 @@
 	#select div span{margin-right:10px;}
 	#select .el-col{margin:10px 0;padding-left:10px;text-align:left}
 	.content{padding:10px 0;margin-top: 20px}
-	.el-input{width:217px;}
+  .el-input{width:285px;}
 	.el-pagination{margin-top:20px}
 	>>> .el-dialog{border-radius:5px}
 	.el-dialog__body span{font-size:16px}
-	.el-button+.el-button{margin-right:10px;margin-left:0px}
+  .el-button+.el-button{margin-right:0px;margin-left:0px}
 	.InfoTable td{border:1px solid #ccc; padding:10px;}
 	.InfoTable tr td:nth-child(odd){font-size:16px;font-weight:bolder;text-align:right}
 	.InfoTable tr td:nth-child(even){text-align:left}

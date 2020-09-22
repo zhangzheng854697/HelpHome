@@ -6,20 +6,24 @@
 			</div>
 			<div class="login_bg">
 				<div>
-					<div>
-						<el-input placeholder="请输入账号" v-model="UserName">
-							<template slot="prepend">账号：</template>
-						</el-input>
-					</div>
-					<div>
-						<el-input placeholder="请输入密码" v-model="PassWord" show-password>
-							<template slot="prepend">密码：</template>
-						</el-input>
-					</div>
-					
-					<div>
-						<el-button type="primary" @click='Login()'>登 录</el-button>
-					</div>
+          <form  onkeydown="if(event.keyCode==13){return false;}">
+            <div>
+              <el-input placeholder="请输入账号" autofocus v-model="UserName" @keyup.enter.native="Login">
+                <template slot="prepend">账号：</template>
+              </el-input>
+            </div>
+            <div>
+              <el-input placeholder="请输入密码" v-model="PassWord" show-password @keyup.enter.native="Login">
+                <template slot="prepend">密码：</template>
+              </el-input>
+            </div>
+            <div>
+              <el-checkbox v-model="checked">保存为本地常用账号</el-checkbox>
+            </div>
+            <div>
+              <el-button type="primary" @click='Login()'>登 录</el-button>
+            </div>
+          </form>
 				</div>
 			</div>
 		</div>
@@ -30,6 +34,7 @@
   export default {
     data() {
       return {
+        checked:false,
       	UserName: '',
       	PassWord:'',
       }
@@ -54,10 +59,20 @@
 					if(res.success == false){
 						_that.$message.error(res.msg);
 					}else{
+            localStorage.setItem("person_StateID",res[0].person_StateID)
+            localStorage.setItem("person_Role",res[0].person_Role)
+            localStorage.setItem('checked',_that.checked)
+            localStorage.setItem('UserName',_that.checked)
+            localStorage.UserName = res[0].person_Number;
+            if(_that.checked){
+              localStorage.setItem('UserNumber',_that.UserName)
+              localStorage.setItem('UserPwd',_that.PassWord)
+            }else{
+              localStorage.setItem('UserNumber','')
+              localStorage.setItem('UserPwd','')
+            }
 						_that.$router.push('ProjectCode')
 					}
-
-					
 				})
 				.catch(function(response){
 					console.log(response)
@@ -66,25 +81,33 @@
 
 		}
 	},
-    mounted(){
-    	let _that = this;
-		this.$axios({
-		    method: 'post',
-		    url: global_.HandlerLoginIserror,
-		    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
-		})
-		.then(function(response){
-			let res = response;
-			if(res.data.success == false){
-				return false;
-			}else{
-				_that.$router.push('ProjectCode')
-			}
-		})
-		.catch(function(response){
-			return false;
-		})
-}
+  mounted(){
+    let _that = this;
+
+    this.$axios({
+        method: 'post',
+        url: global_.HandlerLoginIserror,
+        headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+    })
+    .then(function(response){
+      let res = response;
+      if(res.data.success == false){
+        return false;
+      }else{
+        localStorage.UserName = response.data[0].person_Number
+        console.log(res)
+        _that.$router.push('ProjectCode')
+      }
+    })
+    .catch(function(response){
+      return false;
+    })
+    this.checked = localStorage.checked == 'true'?true:false
+    if(this.checked){
+      this.UserName = localStorage.UserNumber
+      this.PassWord = localStorage.UserPwd
+    }
+  }
   }
 </script>
 <style scoped>
@@ -97,5 +120,5 @@
 .login_bg>div{padding:98px 0}
 .login_bg>div .el-input{margin-bottom:30px}
 .login_bg>div>div{position:relative}
-
+.el-checkbox{margin-bottom:20px}
 </style>

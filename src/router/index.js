@@ -19,6 +19,13 @@ const InfoProject = () => import('@/components/ProjectCodeManage/InfoProject.vue
 const XtxManage = () => import('@/components/XtxCodeManage/XtxManage.vue')
 const EditXtxCode = () => import('@/components/XtxCodeManage/EditXtxCode.vue')
 const AddXtxCode = () => import('@/components/XtxCodeManage/AddXtxCode.vue')
+const XtxInfoProject = () => import('@/components/XtxCodeManage/XtxInfoProject.vue')
+
+const EspManage = () => import('@/components/EspCodeManage/EspManage.vue')
+const EditEspCode = () => import('@/components/EspCodeManage/EditEspCode.vue')
+const AddEspCode = () => import('@/components/EspCodeManage/AddEspCode.vue')
+const EspInfoProject = () => import('@/components/EspCodeManage/EspInfoProject.vue')
+
 
 const myRoutes = [
 	{
@@ -27,17 +34,17 @@ const myRoutes = [
 		children:[
 			{
 				path:'/HelpManage',
-				name:'HelpManage',
+				name:'反馈信息',
 				meta:{
 					title:"帮助中心",
 					KeepAlive: true
 				},
 				component:HelpManage
 			},
-			
+
 			{
-				path:'/EditManage',
-				name:'EditManage',
+				path:'/HelpManage/EditManage',
+				name:'用户反馈',
 				meta:{
 					title:"帮助中心",
 					KeepAlive: false
@@ -46,73 +53,117 @@ const myRoutes = [
 			},
 			{
 				path:'/ProjectCode',
-				name:'ProjectCode',
+				name:'项目编号管理',
 				meta:{
-					title:"项目编码",
+					title:"项目编号",
 					KeepAlive: true
 				},
 				component:ProjectCode
 			},
 			{
-				path:'/EditProject',
-				name:'EditProject',
+				path:'/ProjectCode/EditProject',
+				name:'项目编号--修改',
 				meta:{
-					title:"项目编码--修改",
+					title:"项目编号--修改",
 					KeepAlive: false
 				},
 				component:EditProject
 			},
 			{
-				path:'/addProject',
-				name:'addProject',
+				path:'/ProjectCode/addProject',
+				name:'项目编号--新增',
 				meta:{
-					title:"项目编码--新增",
+					title:"项目编号--新增",
 					KeepAlive: false
 				},
 				component:addProject
 			},
 			{
-				path:'/InfoProject',
-				name:'InfoProject',
+				path:'/ProjectCode/InfoProject',
+				name:'项目编号--详情',
 				meta:{
-					title:"项目编码--详情",
+					title:"项目编号--详情",
 					KeepAlive: false
 				},
 				component:InfoProject
 			},
 			{
 				path:'/XtxManage',
-				name:'XtxManage',
+				name:'形态学注册码管理',
 				meta:{
-					title:"形态学项目编码",
+					title:"形态学项目编号",
 					KeepAlive: true
 				},
 				component:XtxManage
 			},
 			{
-				path:'/EditXtxCode',
-				name:'EditXtxCode',
+				path:'/XtxManage/EditXtxCode',
+				name:'形态学项目编号--修改',
 				meta:{
-					title:"形态学项目编码--修改",
+					title:"形态学项目编号--修改",
 					KeepAlive: false
 				},
 				component:EditXtxCode
 			},
 			{
-				path:'/AddXtxCode',
-				name:'AddXtxCode',
+				path:'/XtxManage/AddXtxCode',
+				name:'形态学项目编号--新增',
 				meta:{
-					title:"形态学项目编码--新增",
+					title:"形态学项目编号--新增",
 					KeepAlive: false
 				},
 				component:AddXtxCode
 			},
-
+      {
+        path:'/XtxManage/XtxInfoProject',
+        name:'形态学项目编号--详情',
+        meta:{
+          title:"形态学项目编号--详情",
+          KeepAlive: false
+        },
+        component:XtxInfoProject
+      },
+      {
+        path:'/EspManage',
+        name:'Esp序列号管理',
+        meta:{
+          title:"Esp序列号管理",
+          KeepAlive: true
+        },
+        component:EspManage
+      },
+      {
+        path:'/EspManage/EditEspCode',
+        name:'Esp序列号管理---修改',
+        meta:{
+          title:"Esp序列号管理--修改",
+          KeepAlive: false
+        },
+        component:EditEspCode
+      },
+      {
+        path:'/EspManage/AddEspCode',
+        name:'Esp序列号管理---新增',
+        meta:{
+          title:"Esp序列号管理---新增",
+          KeepAlive: false
+        },
+        component:AddEspCode
+      },
+      {
+        path:'/EspManage/EspInfoProject',
+        name:'Esp序列号管理---详情',
+        meta:{
+          title:"Esp序列号管理---详情",
+          KeepAlive: false
+        },
+        component:EspInfoProject
+      },
 		]
 	},
 	{
 		path:'/',
-		name:'Login',
+		name:'项目管理系统--登录',
 		meta:{
 			title:"项目管理系统--登录",
 			KeepAlive: false

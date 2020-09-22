@@ -216,7 +216,7 @@
 		},
 		handleEdit(index,row){
 			let F_Id = row.F_Id;
-			this.$router.push({path:'EditManage',query:{'id':F_Id}})
+			this.$router.push({path:'HelpManage/EditManage',query:{'id':F_Id}})
 		},
 		handleDelete(){
 			let F_Id = this.F_Id;
